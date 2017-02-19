@@ -8,7 +8,7 @@ import ipaddress
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[1;94m', '\033[1;91m', '\33[1;97m', '\33[1;93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
 def coreOptions():
-    options = [["network", "IP range to scan", ""], ["port-timeout", "Timeout (in sec) for port 80.", "0.5"], ["title-timeout", "Timeout (in sec) for title resolve.", "3"]]
+    options = [["network", "IP range to scan", ""], ["port-timeout", "Timeout (in sec) for port 80.", "0.3"], ["title-timeout", "Timeout (in sec) for title resolve.", "3"]]
     return options
 
 def createIPList(network):
@@ -41,7 +41,7 @@ def getTitle(address, port):
         tree = fromstring(r.content)
         return tree.findtext('.//title')
     except KeyboardInterrupt:
-        return int(0)
+        return "/=PORTSPIDER-STOP=/"
     except:
         return False
 
@@ -109,15 +109,15 @@ def core(moduleOptions):
             print(GREEN + "[+] Port 80 is open on '" + stringIP + "'" + END)
             statusWidget()
             title = getTitle(stringIP, 80)
-            if isinstance(title, int):
-                print("\n\n" + GREEN + "[I] HTTP module stopped. Results saved to '" + YELLOW + fileName + GREEN + "'.\n")
-                return
             if not title:
                 print( YELLOW + "[!] Failed to get the title of '" + stringIP + "'" + END)
                 statusWidget()
                 title = "NONE"
             else:
                 if title is not None:
+                    if title == "/=PORTSPIDER-STOP=/":
+                        print("\n\n" + GREEN + "[I] PRINTER module stopped. Results saved to '" + YELLOW + fileName + GREEN + "'. (title)\n")
+                        return
                     title = title.replace("\n", "")
                     try:
                         print(GREEN + "[+] Title of '" + stringIP  +"': '" + title + "'" + END)
