@@ -12,7 +12,7 @@ from modules import printer
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[1;94m', '\033[1;91m', '\33[1;97m', '\33[1;93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
 allModules = [["http", "Scan for open HTTP ports, and get the the titles."], ["printer", "Scan for open printer ports."], ["template", "Template module for developers."]]
-textToModule = [["http", http], ["template", template]]
+textToModule = [["http", http], ["template", template], ["printer", printer]]
 
 inModule = False
 currentModule = ""
