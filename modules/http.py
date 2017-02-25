@@ -109,7 +109,7 @@ def scan(i):
             openPorts = openPorts + 1
             print1(GREEN + "[+] Port 80 is open on '" + stringIP + "'" + END)
             http = getHTTP(stringIP, 80)
-            if not title:
+            if not http:
                 print1(YELLOW + "[!] Failed to get the HTTP response of '" + stringIP + "'" + END)
                 title = "NO-TITLE"
                 code = "NO-CODE"
