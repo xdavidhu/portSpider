@@ -11,7 +11,7 @@ BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[1;94m', '\033[1;91m', '\33[
 def coreOptions():
     options = [["network", "IP range to scan", ""], ["port-timeout", "Timeout (in sec) for port 80.", "0.3"],
                ["title-timeout", "Timeout (in sec) for title resolve.", "3"], ["threads", "Number of threads to run.", "50"],
-               ["verbose", "Show verbose output.", "True"]]
+               ["verbose", "Show verbose output.", "true"]]
     return options
 
 
@@ -169,10 +169,10 @@ def core(moduleOptions):
     threadCount = int(moduleOptions[3][2])
     verbose = moduleOptions[4][2]
 
-    if verbose == "True":
+    if verbose == "true":
         verbose = True
     else:
-        verbose == False
+        verbose = False
 
     try:
         ipList = createIPList(network)
