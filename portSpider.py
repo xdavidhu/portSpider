@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -.- coding: utf-8 -.-
 
-import ipaddress
 import os
+import traceback
 
 # MODULE IMPORT
 from modules import http
@@ -120,8 +120,11 @@ def commandHandler(command):
                     coreModule(moduleOptions)
                 except KeyboardInterrupt:
                     print(GREEN + "[I] Stopping module..." + END)
-                except:
-                    print(RED + "\n[!] Module crashed.\n" + END)
+                except Exception as e:
+                    print(RED + "\n[!] Module crashed." + END)
+                    print(RED + "[!] Debug info:\n'")
+                    print(traceback.format_exc())
+                    print("\n" + END)
             else:
                 print(RED + "[!] Not all options set." + END)
         else:
@@ -155,6 +158,9 @@ def commandHandler(command):
         print(currentModule)
         print(moduleOptions)
 
+    elif command == "":
+        pass
+
     else:
         print(RED + "[!] Unknown command: '" + YELLOW + command + RED + "'. Type '" + YELLOW + "help" + RED + "' for all available commands." + END)
 
@@ -186,3 +192,8 @@ while True:
     except KeyboardInterrupt:
         print(GREEN + "\n[I] Shutting down..." + END)
         raise SystemExit
+    except Exception as e:
+        print(RED + "\n[!] portSpider crashed...\n[!] Debug info: \n")
+        print(traceback.format_exc())
+        print("\n" + END)
+        exit()
