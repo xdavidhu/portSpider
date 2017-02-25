@@ -64,6 +64,13 @@ def scan(i):
     global openPorts
     global done
     for ip in ips[i]:
+
+        ipID = ipID + 1
+        status = (ipID / allIPs) * 100
+        status = format(round(status, 2))
+        status = str(status) + "%"
+        stringIP = str(ip)
+
         for port in ports:
             port = port[0]
             if stop:
@@ -71,11 +78,6 @@ def scan(i):
 
             if (str(ip) == "0"):
                 continue
-            ipID = ipID + 1
-            status = (ipID / allIPs) * 100
-            status = format(round(status, 2))
-            status = str(status) + "%"
-            stringIP = str(ip)
             isUp = checkServer(stringIP, port)
             if isUp:
 
