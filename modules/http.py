@@ -24,7 +24,9 @@ def createIPList(network):
 
 def print1(data):
     if verbose:
+        statusWidget()
         print(data)
+        statusWidget()
 
 def checkServer(address, port):
     s = socket.socket()
