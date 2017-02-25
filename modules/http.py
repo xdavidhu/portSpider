@@ -44,15 +44,27 @@ def checkServer(address, port):
         return "FAIL"
 
 
-def getTitle(address, port):
+def getHTTP(address, port):
+    code = None
+    title = None
+
     try:
-        r = requests.get("http://" + address, timeout=float(titleTimeout))
-        tree = fromstring(r.content)
-        return tree.findtext('.//title')
-    except KeyboardInterrupt:
-        return "/=PORTSPIDER-STOP=/"
+        r = requests.get("http://" + address, timeout=float(titleTimeout), allow_redirects=True)
     except:
         return False
+
+    try:
+        code = r.status_code
+    except:
+        pass
+
+    try:
+        tree = fromstring(r.content)
+        title = tree.findtext('.//title')
+    except:
+        pass
+
+    return [title, code]
 
 
 def writeToFile(line):
@@ -80,7 +92,7 @@ def scan(i):
     global done
     for ip in ips[i]:
         if stop:
-            exit()
+            sys.exit()
 
         if (str(ip) == "0"):
             continue
@@ -96,26 +108,30 @@ def scan(i):
         if isUp:
             openPorts = openPorts + 1
             print1(GREEN + "[+] Port 80 is open on '" + stringIP + "'" + END)
-            title = getTitle(stringIP, 80)
+            http = getHTTP(stringIP, 80)
             if not title:
-                print1(YELLOW + "[!] Failed to get the title of '" + stringIP + "'" + END)
-                title = "NONE"
+                print1(YELLOW + "[!] Failed to get the HTTP response of '" + stringIP + "'" + END)
+                title = "NO-TITLE"
+                code = "NO-CODE"
             else:
+                title = str(http[0])
+                code = str(http[1])
+                if code is not None:
+                    print1(GREEN + "[+] Response code of '" + stringIP + "': '" + code + "'" + END)
+                else:
+                    print1(YELLOW + "[!] Failed to get the response code of '" + stringIP + "'" + YELLOW)
+                    code = "NO-CODE"
                 if title is not None:
-                    if title == "/=PORTSPIDER-STOP=/":
-                        print1(
-                            "\n\n" + GREEN + "[I] PRINTER module stopped. Results saved to '" + YELLOW + fileName + GREEN + "'. (title)\n")
-                        return
                     title = title.replace("\n", "")
                     try:
                         print1(GREEN + "[+] Title of '" + stringIP + "': '" + title + "'" + END)
                     except:
                         print1(YELLOW + "[!] Failed to print title of '" + stringIP + "'" + END)
-                        title = "NONE"
+                        title = "NO-TITLE"
                 else:
                     print1(YELLOW + "[!] Failed to get title of '" + stringIP + "'" + YELLOW)
-                    title = "NONE"
-            logLine = stringIP + " - " + "80 OPEN" + " - " + title + "\n"
+                    title = "NO-TITLE"
+            logLine = stringIP + " - " + "80 OPEN" + " - " + code + " - " + title + "\n"
             logLines.append(logLine)
         elif not isUp:
             print1(RED + "[-] Port 80 is closed on '" + stringIP + "'" + END)
@@ -194,7 +210,7 @@ def core(moduleOptions):
     openPorts = 0
     threads = []
     for i in range(threadCount):
-        i = i - 1
+        i -= 1
         t = threading.Thread(target=scan, args=(i,))
         t.daemon = True
         threads.append(t)
