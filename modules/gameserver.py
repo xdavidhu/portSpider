@@ -8,7 +8,7 @@ BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[1;94m', '\033[1;91m', '\33[
 
 def coreOptions():
     options = [["network", "IP range to scan", ""], ["port-timeout", "Timeout (in sec) for port 80.", "0.3"],
-               ["threads", "Number of threads to run.", "50"], ["verbose", "Show verbose output.", "true"]]
+               ["threads", "Number of threads to run.", "100"], ["verbose", "Show verbose output.", "true"]]
     return options
 
 
@@ -158,7 +158,7 @@ def core(moduleOptions):
     file.write("subnet: " + network + "\n")
     file.close()
 
-    ports = [[25565, "MINECRAFT"], [27015, "CS:GO"], [9987, "TEAMSPEAK"]]
+    ports = [[25565, "MINECRAFT"], [27015, "STEAM-GAME"], [9987, "TEAMSPEAK"]]
 
     ipID = 0
     openPorts = 0
