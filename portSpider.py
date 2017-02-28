@@ -11,8 +11,8 @@ BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[1;94m', '\033[1;91m', '\33[
 
 allModules = [["http", "Scan for open HTTP ports, and get the the titles."], ["ssh", "Scan for open SSH ports."],
               ["printer", "Scan for open printer ports."], ["gameserver", "Scan for open game server ports."],
-              ["template", "Template module for developers."]]
-textToModule = [["http", http], ["template", template], ["printer", printer], ["gameserver", gameserver], ["ssh", ssh]]
+              ["manual", "Scan custom ports."], ["template", "Template module for developers."]]
+textToModule = [["http", http], ["template", template], ["printer", printer], ["gameserver", gameserver], ["ssh", ssh], ["manual", manual]]
 
 inModule = False
 currentModule = ""
@@ -62,7 +62,7 @@ def commandHandler(command):
             else:
                 print(RED + "[!] Module '" + YELLOW + tempModule + RED + "' not found." + END)
         else:
-            print(RED + "[!] Module '" + YELLOW + currentModule + RED + "' already selected." + END)
+            print(RED + "[!] Module '" + YELLOW + currentModule + RED + "' already selected. Type '" + YELLOW + "back" + RED + "' to go back to the main menu." + END)
     elif command == "use":
         print(RED + "[!] Usage: 'use " + YELLOW + "module_name" + RED + "'" + END)
 

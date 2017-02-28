@@ -30,9 +30,6 @@ def checkServer(address, port):
         s.connect((address, port))
         s.close()
         return True
-    except KeyboardInterrupt:
-        s.close()
-        return "STOP"
     except socket.error:
         s.close()
         return False
@@ -65,6 +62,9 @@ def scan(i):
     global done
     for ip in ips[i]:
 
+        if (str(ip) == "0"):
+            continue
+
         ipID = ipID + 1
         status = (ipID / allIPs) * 100
         status = format(round(status, 2))
@@ -76,24 +76,22 @@ def scan(i):
             if stop:
                 sys.exit()
 
-            if (str(ip) == "0"):
-                continue
             isUp = checkServer(stringIP, port)
-            if isUp:
+            if isUp != "FAIL":
+                if isUp:
+                    possibleGame = ""
+                    for tempPort in ports:
+                        if tempPort[0] == port:
+                            possibleGame = tempPort[1]
 
-                possibleGame = ""
-                for tempPort in ports:
-                    if tempPort[0] == port:
-                        possibleGame = tempPort[1]
-
-                openPorts = openPorts + 1
-                print1(GREEN + "[+] Port " + str(port) +  " is open on '" + stringIP + "' - " + possibleGame + END)
-                logLine = stringIP + " - " + str(port) + " OPEN - " + possibleGame + "\n"
-                logLines.append(logLine)
-            elif not isUp:
-                print1(RED + "[-] Port " + str(port) + " is closed on '" + stringIP + "'" + END)
+                    openPorts = openPorts + 1
+                    print1(GREEN + "[+] Port " + str(port) +  " is open on '" + stringIP + "' - " + possibleGame + END)
+                    logLine = stringIP + " - " + str(port) + " OPEN - " + possibleGame + "\n"
+                    logLines.append(logLine)
+                elif not isUp:
+                    print1(RED + "[-] Port " + str(port) + " is closed on '" + stringIP + "'" + END)
             else:
-                print1(RED + "[!] Connecting failed to '" + stringIP + "'" + END)
+                print1(RED + "[!] Failed connecting to '" + stringIP + "'" + END)
     done = done + 1
 
 

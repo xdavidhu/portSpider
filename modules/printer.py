@@ -33,9 +33,6 @@ def checkServer(address, port):
         s.connect((address, port))
         s.close()
         return True
-    except KeyboardInterrupt:
-        s.close()
-        return "STOP"
     except socket.error:
         s.close()
         return False
@@ -109,51 +106,50 @@ def scan(i):
                     continue
 
             isUp = checkServer(stringIP, port)
-            if isUp == "STOP":
-                print1("\n\n" + GREEN + "[I] PRINTER module stopped. Results saved to '" + YELLOW + fileName + GREEN + "'.\n")
-                return
-            if isUp:
-                portsOpen.append(port)
-                openPorts = openPorts + 1
-                print1(GREEN + "[+] Port " + str(port) + " is open on '" + stringIP + "'" + END)
 
-                if port == 80:
-                    http = getHTTP(stringIP, 80)
-                    if not http:
-                        print1(YELLOW + "[!] Failed to get the HTTP response of '" + stringIP + "'" + END)
-                        title = "NO-TITLE"
-                        code = "NO-CODE"
-                    else:
-                        title = str(http[0])
-                        code = str(http[1])
-                        if code is not None:
-                            print1(GREEN + "[+] Response code of '" + stringIP + "': '" + code + "'" + END)
-                        else:
-                            print1(YELLOW + "[!] Failed to get the response code of '" + stringIP + "'" + YELLOW)
-                            code = "NO-CODE"
-                        if title is not None:
-                            title = title.replace("\n", "")
-                            try:
-                                print1(GREEN + "[+] Title of '" + stringIP + "': '" + title + "'" + END)
-                            except:
-                                print1(YELLOW + "[!] Failed to print title of '" + stringIP + "'" + END)
-                                title = "NO-TITLE"
-                        else:
-                            print1(YELLOW + "[!] Failed to get title of '" + stringIP + "'" + YELLOW)
+            if isUp != "FAIL":
+                if isUp:
+                    portsOpen.append(port)
+                    openPorts = openPorts + 1
+                    print1(GREEN + "[+] Port " + str(port) + " is open on '" + stringIP + "'" + END)
+
+                    if port == 80:
+                        http = getHTTP(stringIP, 80)
+                        if not http:
+                            print1(YELLOW + "[!] Failed to get the HTTP response of '" + stringIP + "'" + END)
                             title = "NO-TITLE"
+                            code = "NO-CODE"
+                        else:
+                            title = str(http[0])
+                            code = str(http[1])
+                            if code is not None:
+                                print1(GREEN + "[+] Response code of '" + stringIP + "': '" + code + "'" + END)
+                            else:
+                                print1(YELLOW + "[!] Failed to get the response code of '" + stringIP + "'" + YELLOW)
+                                code = "NO-CODE"
+                            if title is not None:
+                                title = title.replace("\n", "")
+                                try:
+                                    print1(GREEN + "[+] Title of '" + stringIP + "': '" + title + "'" + END)
+                                except:
+                                    print1(YELLOW + "[!] Failed to print title of '" + stringIP + "'" + END)
+                                    title = "NO-TITLE"
+                            else:
+                                print1(YELLOW + "[!] Failed to get title of '" + stringIP + "'" + YELLOW)
+                                title = "NO-TITLE"
 
-                logLine = stringIP + " - " + "OPEN:"
-                for port in portsOpen:
-                    logLine = logLine + " " + str(port)
-                if title != "":
-                    logLine = logLine + " - HTTP Title: " + title
-                logLine = logLine + "\n"
-                logLines.append(logLine)
+                    logLine = stringIP + " - " + "OPEN:"
+                    for port in portsOpen:
+                        logLine = logLine + " " + str(port)
+                    if title != "":
+                        logLine = logLine + " - HTTP Title: " + title
+                    logLine = logLine + "\n"
+                    logLines.append(logLine)
 
-            elif not isUp:
-                print1(RED + "[-] Port " + str(port) + " is closed on '" + stringIP + "'" + END)
+                elif not isUp:
+                    print1(RED + "[-] Port " + str(port) + " is closed on '" + stringIP + "'" + END)
             else:
-                print1(RED + "[!] Connecting failed to '" + stringIP + "'" + END)
+                print1(RED + "[!] Failed connecting to '" + stringIP + "'" + END)
     done = done + 1
 
 
