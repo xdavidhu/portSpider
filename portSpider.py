@@ -5,11 +5,7 @@ import os
 import traceback
 
 # MODULE IMPORT
-from modules import http
-from modules import template
-from modules import printer
-from modules import gameserver
-from modules import ssh
+from modules import *
 
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[1;94m', '\033[1;91m', '\33[1;97m', '\33[1;93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
