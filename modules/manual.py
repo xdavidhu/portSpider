@@ -127,7 +127,7 @@ def core(moduleOptions):
     try:
         ipList = createIPList(network)
     except:
-        print(RED + "[!] Invaild subnet. Exiting...\n")
+        print(RED + "[!] Invalid subnet. Exiting...\n")
         return
     allIPs = len(ipList)
 
@@ -168,7 +168,7 @@ def core(moduleOptions):
             ports.append(int(port))
             strPortList = strPortList + " " + YELLOW + str(port) + GREEN + ","
     except:
-        print(RED + "[!] Invaild list of ports! Exiting...\n" + END)
+        print(RED + "[!] Invalid list of ports! Exiting...\n" + END)
         return
     strPortList = strPortList[:-1]
 

@@ -190,7 +190,7 @@ def core(moduleOptions):
     try:
         ipList = createIPList(network)
     except:
-        print(RED + "[!] Invaild subnet. Exiting...\n")
+        print(RED + "[!] Invalid subnet. Exiting...\n")
         return
     allIPs = len(ipList)
 
