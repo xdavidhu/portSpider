@@ -1,4 +1,4 @@
-import mysqlclient
+import MySQLdb
 import socket
 import datetime
 import sys
@@ -9,31 +9,30 @@ BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[1;94m', '\033[1;91m', '\33[
 
 def checkSQL(host, port):
     try:
-        con = pymongo.MongoClient(host, port)
+        con = MySQLdb.connect(host=host, user='root', passwd='', connect_timeout=sqlTimeout)
     except:
-        return ["conection-error"]
-
-    hasAuth = True
-    try:
-        dbs = con.database_names()
-        hasAuth = False
-    except:
-        return ["permission-error"]
+        return ["login-error"]
 
     try:
-        serverVersion = tuple(con.server_info()['version'])
-        tempServerVersion = ""
-        for i in serverVersion:
-            tempServerVersion = tempServerVersion + i
-        serverVersion = tempServerVersion
+        cursor = con.cursor()
+        cursor.execute("SHOW DATABASES")
+        dbs = cursor.fetchall()
+    except:
+        dbs = ["-"]
+
+    try:
+        cursor = con.cursor()
+        cursor.execute("SELECT VERSION()")
+        serverVersion = str(cursor.fetchone())
     except:
         serverVersion = "-"
 
     return ["success", serverVersion, dbs]
 
 def coreOptions():
-    options = [["network", "IP range to scan", ""], ["port", "Port to scan.", "27017"],
-               ["port-timeout", "Timeout (in sec) for port 80.", "0.3"], ["threads", "Number of threads to run.", "50"],
+    options = [["network", "IP range to scan", ""], ["port", "Port to scan.", "3306"],
+               ["port-timeout", "Timeout (in sec) for port 80.", "0.3"], ["sql-timeout", "Timeout (in sec) for the database connection.", "3"],
+               ["threads", "Number of threads to run.", "50"],
                ["checkauth", "Connect to the server and perform tests.", "true"], ["verbose", "Show verbose output.", "true"]]
     return options
 
@@ -106,20 +105,20 @@ def scan(i):
                 print1(GREEN + "[+] Port " + str(port) + " is open on '" + stringIP + "'" + END)
 
                 if checkauth:
-                    mongoStatusReason = "UNKNOWN ERROR"
-                    mongo = checkMongo(stringIP, port)
-                    if mongo[0] == "conection-error":
-                        mongoStatus = False
-                        mongoStatusReason = "CONNECTION ERROR"
-                        print1(RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mongoStatusReason + END)
-                    elif mongo[0] == "permission-error":
-                        mongoStatus = False
-                        mongoStatusReason = "PERMISSION ERROR"
-                        print1(RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mongoStatusReason + END)
-                    elif mongo[0] == "success":
-                        mongoStatus = True
-                        version = mongo[1]
-                        dbs = mongo[2]
+                    mysqlStatusReason = "UNKNOWN ERROR"
+                    mysql = checkSQL(stringIP, port)
+                    if mysql[0] == "login-error":
+                        mysqlStatus = False
+                        mysqlStatusReason = "CONNECTION ERROR"
+                        print1(RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mysqlStatusReason + END)
+                    elif mysql[0] == "permission-error":
+                        mysqlStatus = False
+                        mysqlStatusReason = "PERMISSION ERROR"
+                        print1(RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mysqlStatusReason + END)
+                    elif mysql[0] == "success":
+                        mysqlStatus = True
+                        version = mysql[1]
+                        dbs = mysql[2]
 
                         dbsList = ""
                         for db in dbs:
@@ -129,16 +128,16 @@ def scan(i):
                         else:
                             dbsList = "-"
 
-                        print1(GREEN + "[+] Open database found:\n\tIP: " + stringIP + "\n\t" + "MongoDB version: " + str(version) + "\n\tDB's: " + dbsList + "\n")
+                        print1(GREEN + "[+] Open database found:\n\tIP: " + stringIP + "\n\t" + "MySQL version: " + str(version) + "\n\tDB's: " + dbsList + "\n")
 
                     else:
-                        print1(RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mongoStatusReason + END)
-                        mongoStatus = False
+                        print1(RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mysqlStatusReason + END)
+                        mysqlStatus = False
 
-                    if mongoStatus:
+                    if mysqlStatus:
                         logLine = stringIP + " - " + str(port) + " OPEN" + " - " + "OPEN DATABASE - Version: " + version + " - " + " DB's: " + dbsList + "\n"
                     else:
-                        logLine = stringIP + " - " + str(port) + " OPEN" + " - DB SCAN ERROR: " + mongoStatusReason + "\n"
+                        logLine = stringIP + " - " + str(port) + " OPEN" + " - DB SCAN ERROR: " + mysqlStatusReason + "\n"
                     logLines.append(logLine)
                 else:
                     logLine = stringIP + " - " + str(port) + " OPEN\n"
@@ -152,7 +151,7 @@ def scan(i):
 
 def core(moduleOptions):
     print(
-        "\n" + GREEN + "MONGODB module by @xdavidhu. Scanning subnet '" + YELLOW + moduleOptions[0][2] + GREEN + "'...\n")
+        "\n" + GREEN + "MYSQL module by @xdavidhu. Scanning subnet '" + YELLOW + moduleOptions[0][2] + GREEN + "'...\n")
 
     global status
     global ipID
@@ -170,6 +169,7 @@ def core(moduleOptions):
     global openPorts
     global logLines
     global checkauth
+    global sqlTimeout
     logLines = []
     stop = False
     done = 0
@@ -181,9 +181,16 @@ def core(moduleOptions):
         return
     portTimeout = moduleOptions[2][2]
     network = moduleOptions[0][2]
-    threadCount = int(moduleOptions[3][2])
-    checkauth = moduleOptions[4][2]
-    verbose = moduleOptions[5][2]
+    sqlTimeout = moduleOptions[3][2]
+    threadCount = int(moduleOptions[4][2])
+    checkauth = moduleOptions[5][2]
+    verbose = moduleOptions[6][2]
+
+    try:
+        sqlTimeout = int(sqlTimeout)
+    except:
+        print(RED + "[!] Invalid sql-timeout. Exiting...\n")
+        return
 
     if verbose == "true":
         verbose = True
@@ -220,7 +227,7 @@ def core(moduleOptions):
     i = datetime.datetime.now()
     i = str(i).replace(" ", "_")
     i = str(i).replace(":", "-")
-    fileName = "log-mongodb-portSpider-" + i + ".log"
+    fileName = "log-mysql-portSpider-" + i + ".log"
 
     file = open(fileName, 'w')
     file.write("subnet: " + network + "\n")
@@ -251,4 +258,4 @@ def core(moduleOptions):
         except:
             writeToFile("WRITING-ERROR")
 
-    print("\n\n" + GREEN + "[I] MONGODB module done. Results saved to '" + YELLOW + fileName + GREEN + "'.\n")
+    print("\n\n" + GREEN + "[I] MYSQL module done. Results saved to '" + YELLOW + fileName + GREEN + "'.\n")

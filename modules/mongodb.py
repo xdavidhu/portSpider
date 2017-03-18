@@ -9,7 +9,7 @@ BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[1;94m', '\033[1;91m', '\33[
 
 def checkMongo(host, port):
     try:
-        con = pymongo.MongoClient(host, port)
+        con = pymongo.MongoClient(host=host, port=port, connectTimeoutMS=mongoTimeout)
     except:
         return ["conection-error"]
 
@@ -33,7 +33,8 @@ def checkMongo(host, port):
 
 def coreOptions():
     options = [["network", "IP range to scan", ""], ["port", "Port to scan.", "27017"],
-               ["port-timeout", "Timeout (in sec) for port 80.", "0.3"], ["threads", "Number of threads to run.", "50"],
+               ["port-timeout", "Timeout (in sec) for port 80.", "0.3"], ["mongo-timeout", "Timeout (in sec) for the database connection.", "3"],
+               ["threads", "Number of threads to run.", "50"],
                ["checkauth", "Connect to the server and perform tests.", "true"], ["verbose", "Show verbose output.", "true"]]
     return options
 
@@ -170,6 +171,7 @@ def core(moduleOptions):
     global openPorts
     global logLines
     global checkauth
+    global mongoTimeout
     logLines = []
     stop = False
     done = 0
@@ -181,9 +183,18 @@ def core(moduleOptions):
         return
     portTimeout = moduleOptions[2][2]
     network = moduleOptions[0][2]
-    threadCount = int(moduleOptions[3][2])
-    checkauth = moduleOptions[4][2]
-    verbose = moduleOptions[5][2]
+    mongoTimeout = moduleOptions[3][2]
+    threadCount = int(moduleOptions[4][2])
+    checkauth = moduleOptions[5][2]
+    verbose = moduleOptions[6][2]
+
+    try:
+        mongoTimeout = int(mongoTimeout)
+        mongoTimeout = round(mongoTimeout)
+        mongoTimeout = mongoTimeout * 1000
+    except:
+        print(RED + "[!] Invalid mongo-timeout. Exiting...\n")
+        return
 
     if verbose == "true":
         verbose = True
