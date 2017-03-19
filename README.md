@@ -7,7 +7,7 @@
     ╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝     ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝
                                                  v1.0 by David Schütz (@xdavidhu)
   
-<h3>A multithreaded network scanner with modules.</h3>
+<h3>A lightning fast multithreaded network scanner framework with modules.</h3>
 
 # modules:
   * **http** - Scan for open HTTP ports, and get the the titles.<br>
