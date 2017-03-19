@@ -18,6 +18,15 @@
   * **gameserver** - Scan for open game server ports.<br>
   * **manual** - Scan custom ports.<br>
 
+# commands:
+  * **modules** - List all modules.<br>
+  * **use** - Use a module.<br>
+  * **options** - Show a module's options.<br>
+  * **set** - Set an option.<br>
+  * **run** - Run the selected module.<br>
+  * **back** - Go back to menu.<br>
+  * **exit** - Shut down portSpider.<br>
+
 # installing:
 
   <h3>Debian based systems:</h3>
