@@ -52,7 +52,8 @@ $ cd portSpider/
 
 $ python3 -m pip install -r requirements.txt
 ```
-**NOTE**: You need to have [Homebrew](http://brew.sh/) installed before running the macOS/OSX installation.
+**NOTE**: You need to have [Homebrew](http://brew.sh/) installed before running the macOS/OSX installation.<br>
+**WARNING**: portSpider is only compatible with Python 3.3 & 3.4 & 3.5 & 3.6
 
 # contribution:
   <h4>If you have any ideas about new modules and improvements in portSpider, feel free to contribute.</h4>
