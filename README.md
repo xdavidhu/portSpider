@@ -7,6 +7,7 @@
     ╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝     ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝
                                                  v1.0 by David Schütz (@xdavidhu)
 [![Build Status](https://travis-ci.org/xdavidhu/portSpider.svg?branch=master)](https://travis-ci.org/xdavidhu/portSpider)
+[![Compatibility](https://img.shields.io/badge/python-3.3%2C%203.4%2C%203.5%2C%203.6-brightgreen.svg)](https://github.com/xdavidhu/portSpider)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/xdavidhu/portSpider/blob/master/LICENSE)
 [![Stars](https://img.shields.io/github/stars/xdavidhu/portSpider.svg)](https://github.com/xdavidhu/portSpider)
 <h3>A lightning fast multithreaded network scanner framework with modules.</h3>
