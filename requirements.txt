@@ -2,3 +2,4 @@ lxml
 requests
 mysqlclient
 pymongo
+ipaddress
