@@ -3,6 +3,7 @@ import datetime
 import sys
 import ipaddress
 import threading
+import os
 
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[1;94m', '\033[1;91m', '\33[1;97m', '\33[1;93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
@@ -145,7 +146,9 @@ def core(moduleOptions):
     i = datetime.datetime.now()
     i = str(i).replace(" ", "_")
     i = str(i).replace(":", "-")
-    fileName = "log-ssh-portSpider-" + i + ".log"
+    if not os.path.exists("logs"):
+        os.makedirs("logs")
+    fileName = "logs/log-ssh-portSpider-" + i + ".log"
 
     file = open(fileName, 'w')
     file.write("subnet: " + network + "\n")
