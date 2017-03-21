@@ -28,11 +28,12 @@ def checkServer(address, port):
     s.settimeout(float(portTimeout))
     try:
         s.connect((address, port))
+        data = s.recv(4096)
         s.close()
-        return True
+        return ["True", data]
     except socket.error:
         s.close()
-        return False
+        return "False"
     except:
         s.close()
         return "FAIL"
@@ -74,13 +75,13 @@ def scan(i):
             sys.exit()
 
         isUp = checkServer(stringIP, port)
-        if isUp != "FAIL":
-            if isUp:
+        if isUp[0] != "FAIL":
+            if isUp[0] == "True":
                 openPorts = openPorts + 1
-                print1(GREEN + "[+] Port " + str(port) +  " is open on '" + stringIP + "'" + END)
-                logLine = stringIP + "\n"
+                print1(GREEN + "[+] Port " + str(port) +  " is open on '" + stringIP + "' - Connection response: " + str(isUp[1]) + END)
+                logLine = stringIP + " - " + str(isUp[1]) + "\n"
                 logLines.append(logLine)
-            elif not isUp:
+            elif not isUp[0] == "True":
                 print1(RED + "[-] Port " + str(port) + " is closed on '" + stringIP + "'" + END)
         else:
             print1(RED + "[!] Failed connecting to '" + stringIP + "'" + END)
