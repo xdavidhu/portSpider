@@ -180,7 +180,11 @@ header = """
 print(GREEN + header + END)
 
 moduleList = ""
+i = 0
 for module in allModules:
+    i += 1
+    if i%7 == 0:
+        moduleList += "\n"
     moduleList = moduleList + YELLOW + module[0] + GREEN + ", "
 moduleList = moduleList[:-2]
 print(GREEN + "Loaded modules: " + moduleList + "\n")
