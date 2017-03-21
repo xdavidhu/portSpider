@@ -3,6 +3,7 @@
 
 import os
 import traceback
+import argparse
 
 # MODULE IMPORT
 from modules import *
@@ -167,6 +168,14 @@ def commandHandler(command):
 
     else:
         print(RED + "[!] Unknown command: '" + YELLOW + command + RED + "'. Type '" + YELLOW + "help" + RED + "' for all available commands." + END)
+
+parser = argparse.ArgumentParser(description="portSpider")
+parser.add_argument("--test", action='store_true')
+args, leftovers = parser.parse_known_args()
+
+if args.test:
+    print("Test build detected. Exiting...")
+    exit()
 
 header = """
 ██████╗  ██████╗ ██████╗ ████████╗███████╗██████╗ ██╗██████╗ ███████╗██████╗
