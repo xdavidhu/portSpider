@@ -1,14 +1,22 @@
 #!/usr/bin/env python3
 # -.- coding: utf-8 -.-
 
-import os
-import traceback
-import argparse
-
-# MODULE IMPORT
-from modules import *
-
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[1;94m', '\033[1;91m', '\33[1;97m', '\33[1;93m', '\033[1;35m', '\033[1;32m', '\033[0m'
+
+
+try:
+    import os
+    import traceback
+    import argparse
+
+    # MODULE IMPORT
+    from modules import *
+except KeyboardInterrupt:
+    print(GREEN + "\n[I] Shutting down..." + END)
+    raise SystemExit
+except:
+    print(RED + "\n[!] Module input failed. Please make sure to install the dependencies." + END)
+    raise SystemExit
 
 allModules = [["http", "Scan for open HTTP ports, and get the the titles."],
               ["mongodb", "Scan for open MongoDB instances, and check if they are password protected."],
