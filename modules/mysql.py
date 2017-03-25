@@ -247,7 +247,6 @@ def core(moduleOptions):
     openPorts = 0
     threads = []
     for i in range(threadCount):
-        # i -= 1
         print("Starting thread " + str(i))
         t = threading.Thread(target=scan, args=(i,))
         t.daemon = True
