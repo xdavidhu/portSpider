@@ -106,7 +106,6 @@ def scan(i):
         ip = threadManager.getNextIp()
         if ip == 0:
             break
-        # ipID = ipID + 1
         status = (threadManager.getID() / allIPs) * 100
         status = format(round(status, 2))
         status = str(status) + "%"
@@ -184,7 +183,6 @@ def core(moduleOptions):
     global verbose
     global stop
     global port
-    # global ipID
     global openPorts
     global logLines
     global checkauth
@@ -242,7 +240,6 @@ def core(moduleOptions):
     file.write("subnet: " + network + "\n")
     file.close()
 
-    # ipID = 0
     openPorts = 0
     threads = []
     for i in range(threadCount):
@@ -252,7 +249,7 @@ def core(moduleOptions):
         t.start()
 
     try:
-        while (done != threadCount) or (threadManager.getID() == allIPs):
+        while (done != threadCount) and (threadManager.getID() != allIPs):
             pass
             statusWidget()
     except KeyboardInterrupt:
