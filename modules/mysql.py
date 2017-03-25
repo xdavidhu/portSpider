@@ -8,6 +8,22 @@ import os
 
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[1;94m', '\033[1;91m', '\33[1;97m', '\33[1;93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
+class ThreadManager(object):
+    i = 0
+
+    def __init__(self, ipList):
+        self.allIps = ipList
+        self.size = len(ipList)
+
+    def getNextIp(self):
+        if not (self.i >= self.size - 1):
+            ip = self.allIps[self.i]
+            self.i += 1
+            return ip
+        return 0
+
+    def getID(self):
+        return self.i + 1
 
 def checkSQL(host, port):
     loginFail = False
@@ -99,7 +115,6 @@ def scan(i):
     global status
     global openPorts
     global done
-    global threadManager
     while True:
         if stop:
             sys.exit()
@@ -187,6 +202,7 @@ def core(moduleOptions):
     global logLines
     global checkauth
     global sqlTimeout
+    global threadManager
     logLines = []
     stop = False
     done = 0
@@ -226,7 +242,6 @@ def core(moduleOptions):
         return
     allIPs = len(ipList)
 
-    global threadManager
     threadManager = ThreadManager(ipList)
 
     i = datetime.datetime.now()
@@ -249,8 +264,9 @@ def core(moduleOptions):
         t.start()
 
     try:
-        while (done != threadCount) and (threadManager.getID() != allIPs):
-            pass
+        while True:
+            if done == threadCount and threadManager.getID() == allIPs:
+                break
             statusWidget()
     except KeyboardInterrupt:
         stop = True
@@ -265,21 +281,3 @@ def core(moduleOptions):
         except:
             writeToFile("WRITING-ERROR")
     print("\n\n" + GREEN + "[I] MYSQL module done. Results saved to '" + YELLOW + fileName + GREEN + "'.\n")
-
-
-class ThreadManager(object):
-    i = 0
-
-    def __init__(self, ipList):
-        self.allIps = ipList
-        self.size = len(ipList)
-
-    def getNextIp(self):
-        if not (self.i >= self.size - 1):
-            ip = self.allIps[self.i]
-            self.i += 1
-            return ip
-        return 0
-
-    def getID(self):
-        return self.i + 1
