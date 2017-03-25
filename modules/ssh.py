@@ -7,6 +7,23 @@ import os
 
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[1;94m', '\033[1;91m', '\33[1;97m', '\33[1;93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
+class ThreadManager(object):
+    i = 0
+
+    def __init__(self, ipList):
+        self.allIps = ipList
+        self.size = len(ipList)
+
+    def getNextIp(self):
+        if not (self.i >= self.size - 1):
+            ip = self.allIps[self.i]
+            self.i += 1
+            return ip
+        return 0
+
+    def getID(self):
+        return self.i + 1
+
 def coreOptions():
     options = [["network", "IP range to scan", ""], ["port-timeout", "Timeout (in sec) for port 80.", "0.3"],
                ["threads", "Number of threads to run.", "50"], ["verbose", "Show verbose output.", "true"]]
@@ -51,24 +68,23 @@ def restart_line():
 
 
 def statusWidget():
-    sys.stdout.write(GREEN + "[" + status + "] " + YELLOW + str(ipID) + GREEN + " / " + YELLOW + str(
+    sys.stdout.write(GREEN + "[" + status + "] " + YELLOW + str(threadManager.getID()) + GREEN + " / " + YELLOW + str(
         allIPs) + GREEN + " hosts done." + END)
     restart_line()
     sys.stdout.flush()
 
 
 def scan(i):
-    global ipID
     global status
     global openPorts
     global done
-    for ip in ips[i]:
-
-        if (str(ip) == "0"):
-            continue
-
-        ipID = ipID + 1
-        status = (ipID / allIPs) * 100
+    while True:
+        if stop:
+            sys.exit()
+        ip = threadManager.getNextIp()
+        if ip == 0:
+            break
+        status = (threadManager.getID() / allIPs) * 100
         status = format(round(status, 2))
         status = str(status) + "%"
         stringIP = str(ip)
@@ -94,7 +110,6 @@ def core(moduleOptions):
         "\n" + GREEN + "SSH module by @xdavidhu. Scanning subnet '" + YELLOW + moduleOptions[0][2] + GREEN + "'...\n")
 
     global status
-    global ipID
     global fileName
     global allIPs
     global portTimeout
@@ -104,9 +119,9 @@ def core(moduleOptions):
     global verbose
     global stop
     global port
-    global ipID
     global openPorts
     global logLines
+    global threadManager
     logLines = []
     stop = False
     done = 0
@@ -128,21 +143,8 @@ def core(moduleOptions):
         return
     allIPs = len(ipList)
 
-    h = threadCount
-    w = int(allIPs / threadCount)
-    if (w < allIPs / threadCount):
-        w = w + 1
-    ips = [[0 for x in range(w)] for y in range(h)]
-    i = 0
-    i2 = [0 for x in range(h)]
+    threadManager = ThreadManager(ipList)
 
-
-    for ip in ipList:
-        if (i + 1 > threadCount):
-            i = 0
-        ips[i][i2[i]] = ip
-        i2[i] = i2[i] + 1;
-        i = i + 1
     i = datetime.datetime.now()
     i = str(i).replace(" ", "_")
     i = str(i).replace(":", "-")
@@ -156,7 +158,6 @@ def core(moduleOptions):
 
     port = 22
 
-    ipID = 0
     openPorts = 0
     threads = []
     for i in range(threadCount):
@@ -167,13 +168,16 @@ def core(moduleOptions):
         t.start()
 
     try:
-        while done != threadCount:
-                pass
-                statusWidget()
+        while True:
+            if done == threadCount and threadManager.getID() == allIPs:
+                break
+            statusWidget()
     except KeyboardInterrupt:
             stop = True
             verbose = False
             print("\n" + RED + "[I] Stopping..." + END)
+    stop = True
+    verbose = False
 
     for logLine in logLines:
         try:
