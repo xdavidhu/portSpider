@@ -89,14 +89,13 @@ def restart_line():
 
 
 def statusWidget():
-    sys.stdout.write(GREEN + "[" + status + "] " + YELLOW + str(ipID) + GREEN + " / " + YELLOW + str(
+    sys.stdout.write(GREEN + "[" + status + "] " + YELLOW + str(threadManager.getID()) + GREEN + " / " + YELLOW + str(
         allIPs) + GREEN + " hosts done." + END)
     restart_line()
     sys.stdout.flush()
 
 
 def scan(i):
-    global ipID
     global status
     global openPorts
     global done
@@ -107,8 +106,8 @@ def scan(i):
         ip = threadManager.getNextIp()
         if ip == 0:
             break
-        ipID = ipID + 1
-        status = (ipID / allIPs) * 100
+        # ipID = ipID + 1
+        status = (threadManager.getID() / allIPs) * 100
         status = format(round(status, 2))
         status = str(status) + "%"
         stringIP = str(ip)
@@ -185,7 +184,7 @@ def core(moduleOptions):
     global verbose
     global stop
     global port
-    global ipID
+    # global ipID
     global openPorts
     global logLines
     global checkauth
@@ -243,18 +242,17 @@ def core(moduleOptions):
     file.write("subnet: " + network + "\n")
     file.close()
 
-    ipID = 0
+    # ipID = 0
     openPorts = 0
     threads = []
     for i in range(threadCount):
-        print("Starting thread " + str(i))
         t = threading.Thread(target=scan, args=(i,))
         t.daemon = True
         threads.append(t)
         t.start()
 
     try:
-        while done != threadCount:
+        while (done != threadCount) or (threadManager.getID() == allIPs):
             pass
             statusWidget()
     except KeyboardInterrupt:
@@ -267,7 +265,6 @@ def core(moduleOptions):
             writeToFile(logLine)
         except:
             writeToFile("WRITING-ERROR")
-
     print("\n\n" + GREEN + "[I] MYSQL module done. Results saved to '" + YELLOW + fileName + GREEN + "'.\n")
 
 
@@ -284,3 +281,6 @@ class ThreadManager(object):
             self.i += 1
             return ip
         return 0
+
+    def getID(self):
+        return self.i + 1
