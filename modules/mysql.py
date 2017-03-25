@@ -8,6 +8,7 @@ import os
 
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[1;94m', '\033[1;91m', '\33[1;97m', '\33[1;93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
+
 def checkSQL(host, port):
     loginFail = False
     try:
@@ -37,11 +38,14 @@ def checkSQL(host, port):
 
     return ["success", serverVersion, dbs]
 
+
 def coreOptions():
     options = [["network", "IP range to scan", ""], ["port", "Port to scan.", "3306"],
-               ["port-timeout", "Timeout (in sec) for port 80.", "0.3"], ["sql-timeout", "Timeout (in sec) for the database connection.", "3"],
+               ["port-timeout", "Timeout (in sec) for port 80.", "0.3"],
+               ["sql-timeout", "Timeout (in sec) for the database connection.", "3"],
                ["threads", "Number of threads to run.", "50"],
-               ["checkauth", "Connect to the server and perform tests.", "true"], ["verbose", "Show verbose output.", "true"]]
+               ["checkauth", "Connect to the server and perform tests.", "true"],
+               ["verbose", "Show verbose output.", "true"]]
     return options
 
 
@@ -52,9 +56,11 @@ def createIPList(network):
         ipList.append(x)
     return ipList
 
+
 def print1(data):
     if verbose:
         print(data)
+
 
 def checkServer(address, port):
     s = socket.socket()
@@ -94,12 +100,11 @@ def scan(i):
     global status
     global openPorts
     global done
-    for ip in ips[i]:
+    global threadManager
+    while threadManager.hasNext():
         if stop:
             sys.exit()
-
-        if (str(ip) == "0"):
-            continue
+        ip = threadManager.getNextIp()
         ipID = ipID + 1
         status = (ipID / allIPs) * 100
         status = format(round(status, 2))
@@ -118,11 +123,13 @@ def scan(i):
                     if mysql[0] == "login-error":
                         mysqlStatus = False
                         mysqlStatusReason = "CONNECTION ERROR"
-                        print1(RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mysqlStatusReason + END)
+                        print1(
+                            RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mysqlStatusReason + END)
                     elif mysql[0] == "permission-error":
                         mysqlStatus = False
                         mysqlStatusReason = "PERMISSION ERROR"
-                        print1(RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mysqlStatusReason + END)
+                        print1(
+                            RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mysqlStatusReason + END)
                     elif mysql[0] == "success":
                         mysqlStatus = True
                         version = mysql[1]
@@ -136,16 +143,20 @@ def scan(i):
                         else:
                             dbsList = "-"
 
-                        print1(GREEN + "[+] Open database found:\n\tIP: " + stringIP + "\n\t" + "MySQL version: " + str(version) + "\n\tDB's: " + dbsList + "\n")
+                        print1(GREEN + "[+] Open database found:\n\tIP: " + stringIP + "\n\t" + "MySQL version: " + str(
+                            version) + "\n\tDB's: " + dbsList + "\n")
 
                     else:
-                        print1(RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mysqlStatusReason + END)
+                        print1(
+                            RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mysqlStatusReason + END)
                         mysqlStatus = False
 
                     if mysqlStatus:
-                        logLine = stringIP + " - " + str(port) + " OPEN" + " - " + "OPEN DATABASE - Version: " + version + " - " + " DB's: " + dbsList + "\n"
+                        logLine = stringIP + " - " + str(
+                            port) + " OPEN" + " - " + "OPEN DATABASE - Version: " + version + " - " + " DB's: " + dbsList + "\n"
                     else:
-                        logLine = stringIP + " - " + str(port) + " OPEN" + " - DB SCAN ERROR: " + mysqlStatusReason + "\n"
+                        logLine = stringIP + " - " + str(
+                            port) + " OPEN" + " - DB SCAN ERROR: " + mysqlStatusReason + "\n"
                     logLines.append(logLine)
                 else:
                     logLine = stringIP + " - " + str(port) + " OPEN\n"
@@ -155,6 +166,7 @@ def scan(i):
         else:
             print1(RED + "[!] Failed connecting to '" + stringIP + "'" + END)
     done = done + 1
+    print("Thread " + str(i) + " done")
 
 
 def core(moduleOptions):
@@ -217,21 +229,9 @@ def core(moduleOptions):
         return
     allIPs = len(ipList)
 
-    h = threadCount
-    w = int(allIPs / threadCount)
-    if (w < allIPs / threadCount):
-        w = w + 1
-    ips = [[0 for x in range(w)] for y in range(h)]
-    i = 0
-    i2 = [0 for x in range(h)]
+    global threadManager
+    threadManager = ThreadManager(ipList)
 
-
-    for ip in ipList:
-        if (i + 1 > threadCount):
-            i = 0
-        ips[i][i2[i]] = ip
-        i2[i] = i2[i] + 1;
-        i = i + 1
     i = datetime.datetime.now()
     i = str(i).replace(" ", "_")
     i = str(i).replace(":", "-")
@@ -247,7 +247,8 @@ def core(moduleOptions):
     openPorts = 0
     threads = []
     for i in range(threadCount):
-        i -= 1
+        # i -= 1
+        print("Starting thread " + str(i))
         t = threading.Thread(target=scan, args=(i,))
         t.daemon = True
         threads.append(t)
@@ -255,12 +256,12 @@ def core(moduleOptions):
 
     try:
         while done != threadCount:
-                pass
-                statusWidget()
+            pass
+            statusWidget()
     except KeyboardInterrupt:
-            stop = True
-            verbose = False
-            print("\n" + RED + "[I] Stopping..." + END)
+        stop = True
+        verbose = False
+        print("\n" + RED + "[I] Stopping..." + END)
 
     for logLine in logLines:
         try:
@@ -269,3 +270,21 @@ def core(moduleOptions):
             writeToFile("WRITING-ERROR")
 
     print("\n\n" + GREEN + "[I] MYSQL module done. Results saved to '" + YELLOW + fileName + GREEN + "'.\n")
+
+
+class ThreadManager(object):
+    i = 0
+
+    def __init__(self, ipList):
+        self.allIps = ipList
+        self.size = len(ipList)
+
+    def getNextIp(self):
+        ip = self.allIps[self.i]
+        print("self.i => " + str(self.i) + " ip => " + str(ip))
+        self.i += 1
+        return ip
+
+    def hasNext(self):
+        print("self.i => " + str(self.i) + " self.size => " + str(self.size))
+        return not (self.i + 1 == self.size)
