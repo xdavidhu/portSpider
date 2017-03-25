@@ -256,6 +256,8 @@ def core(moduleOptions):
         stop = True
         verbose = False
         print("\n" + RED + "[I] Stopping..." + END)
+    stop = True
+    verbose = False
 
     for logLine in logLines:
         try:
