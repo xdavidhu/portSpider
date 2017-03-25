@@ -101,12 +101,12 @@ def scan(i):
     global openPorts
     global done
     global threadManager
-    while threadManager.hasNext():
+    while True:
         if stop:
             sys.exit()
         ip = threadManager.getNextIp()
         if ip == 0:
-            continue
+            break
         ipID = ipID + 1
         status = (ipID / allIPs) * 100
         status = format(round(status, 2))
@@ -168,7 +168,6 @@ def scan(i):
         else:
             print1(RED + "[!] Failed connecting to '" + stringIP + "'" + END)
     done = done + 1
-    print("Thread " + str(i) + " done. " + str(done) + " threads done")
 
 
 def core(moduleOptions):
@@ -281,13 +280,8 @@ class ThreadManager(object):
         self.size = len(ipList)
 
     def getNextIp(self):
-        if self.hasNext():
+        if not (self.i >= self.size - 1):
             ip = self.allIps[self.i]
-            print("self.i => " + str(self.i) + " ip => " + str(ip))
             self.i += 1
             return ip
         return 0
-
-    def hasNext(self):
-        # print("self.i => " + str(self.i) + " self.size => " + str(self.size))
-        return not (self.i > self.size - 1)
