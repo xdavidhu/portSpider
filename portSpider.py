@@ -18,7 +18,7 @@ except:
     print(RED + "\n[!] Module input failed. Please make sure to install the dependencies." + END)
     raise SystemExit
 
-allModules = [["http", "Scan for open HTTP ports, and get the the titles."],
+allModules = [["http", "Scan for open HTTP ports, and get the titles."],
               ["mongodb", "Scan for open MongoDB instances, and check if they are password protected."],
               ["mysql", "Scan for open MySQL servers, and try to log in with the default credentials."],
               ["ssh", "Scan for open SSH ports."], ["printer", "Scan for open printer ports and websites."],
