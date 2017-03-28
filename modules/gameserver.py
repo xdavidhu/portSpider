@@ -145,6 +145,9 @@ def core(moduleOptions):
 
     try:
         ipList = createIPList(network)
+        allIPs = len(ipList)
+        if allIPs == 0:
+            raise Exception
     except:
         print(RED + "[!] Invalid subnet. Exiting...\n")
         return
