@@ -33,6 +33,12 @@
 
 # usage:
 
+  <h3>Start portSpider with Python3:</h3>
+
+```
+python3 portSpider.py
+```
+
   <h3>Select a module: (eg. 'mysql')</h3>
 
 ```
