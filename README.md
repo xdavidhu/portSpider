@@ -11,6 +11,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/xdavidhu/portSpider/blob/master/LICENSE)
 [![Stars](https://img.shields.io/github/stars/xdavidhu/portSpider.svg)](https://github.com/xdavidhu/portSpider)
 <h3>A lightning fast multithreaded network scanner framework with modules.</h3>
+<h4>portSpider is a tool for scanning huge network ranges to find open ports and vulnerable services. This tool is not intended to scan one target, rather a whole IP range. (eg. 192.168.0.0/24) Most of the time companies/organizations have public information about their owned public IP ranges, so portSpider will help you to scan all of their machines at once for vulnerable devices/services.</h4>
 
 # modules:
   * **http** - Scan for open HTTP ports, and get the the titles.<br>
@@ -29,6 +30,36 @@
   * **run** - Run the selected module.<br>
   * **back** - Go back to menu.<br>
   * **exit** - Shut down portSpider.<br>
+
+# usage:
+
+  <h3>Select a module: (eg. 'mysql')</h3>
+
+```
+portSpider $> use mysql
+```
+
+  <h3>View the module's options:</h3>
+
+```
+portSpider/mysql $> options
+```
+
+  <h3>Set all '[NOT SET]' options: (eg. option 'network' to '192.168.0.0/24')</h3>
+
+```
+portSpider/mysql $> set network 192.168.0.0/24
+```
+
+  <h4>(You can also modify already set options, but that is not required.)</h4>
+
+  <h3>If you have every option set, run the scan</h3>
+
+```
+portSpider/mysql $> run
+```
+
+  <h4>You will see the results on the screen as well as in a text file in the 'logs/' folder.</h4>
 
 # installing:
 
