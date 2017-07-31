@@ -150,9 +150,11 @@ def core(moduleOptions):
     i = datetime.datetime.now()
     i = str(i).replace(" ", "_")
     i = str(i).replace(":", "-")
-    if not os.path.exists("logs"):
-        os.makedirs("logs")
-    fileName = "logs/log-ssh-portSpider-" + i + ".log"
+    script_path = os.path.dirname(os.path.realpath(__file__))
+    script_path = script_path + "/"
+    if not os.path.exists(script_path + "logs"):
+        os.makedirs(script_path + "logs")
+    fileName = script_path + "logs/log-ssh-portSpider-" + i + ".log"
 
     file = open(fileName, 'w')
     file.write("subnet: " + network + "\n")
