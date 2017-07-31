@@ -250,7 +250,7 @@ def core(moduleOptions):
     i = str(i).replace(" ", "_")
     i = str(i).replace(":", "-")
     script_path = os.path.dirname(os.path.realpath(__file__))
-    script_path = script_path + "/"
+    script_path = script_path.replace("modules", "")
     if not os.path.exists(script_path + "logs"):
         os.makedirs(script_path + "logs")
     fileName = script_path + "logs/log-mysql-portSpider-" + i + ".log"
