@@ -53,7 +53,7 @@ portSpider/mysql $> set network 192.168.0.0/24
 
   <h4>(You can also modify already set options, but that is not required.)</h4>
 
-  <h3>If you have every option set, run the scan</h3>
+  <h3>If you have every option set, run the scan:</h3>
 
 ```
 portSpider/mysql $> run
