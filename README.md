@@ -31,6 +31,34 @@
   * **back** - Go back to menu.<br>
   * **exit** - Shut down portSpider.<br>
 
+# installing:
+
+  <h3>Debian based systems:</h3>
+
+```
+$ sudo apt-get update && sudo apt-get install python3 python3-pip -y
+
+$ git clone https://github.com/xdavidhu/portSpider
+
+$ cd portSpider/
+
+$ python3 -m pip install -r requirements.txt
+```
+
+  <h3>macOS / OSX:</h3>
+
+```
+$ brew install python3
+
+$ git clone https://github.com/xdavidhu/portSpider
+
+$ cd portSpider/
+
+$ python3 -m pip install -r requirements.txt
+```
+**NOTE**: You need to have [Homebrew](http://brew.sh/) installed before running the macOS/OSX installation.<br>
+**WARNING**: portSpider is only compatible with Python 3.3 & 3.4 & 3.5 & 3.6
+
 # usage:
 
   <h3>Start portSpider with Python3:</h3>
@@ -67,33 +95,6 @@ portSpider/mysql $> run
 
   <h4>You will see the results on the screen as well as in a text file in the 'logs/' folder.</h4>
 
-# installing:
-
-  <h3>Debian based systems:</h3>
-
-```
-$ sudo apt-get update && sudo apt-get install python3 python3-pip -y
-
-$ git clone https://github.com/xdavidhu/portSpider
-
-$ cd portSpider/
-
-$ python3 -m pip install -r requirements.txt
-```
-
-  <h3>macOS / OSX:</h3>
-
-```
-$ brew install python3
-
-$ git clone https://github.com/xdavidhu/portSpider
-
-$ cd portSpider/
-
-$ python3 -m pip install -r requirements.txt
-```
-**NOTE**: You need to have [Homebrew](http://brew.sh/) installed before running the macOS/OSX installation.<br>
-**WARNING**: portSpider is only compatible with Python 3.3 & 3.4 & 3.5 & 3.6
 
 # developers:
   * David Schütz ([@xdavidhu](https://twitter.com/xdavidhu))
