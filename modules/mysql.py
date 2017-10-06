@@ -75,7 +75,7 @@ def createIPList(network):
 
 def print1(data):
     if verbose:
-        print("\033[K#" + data)
+        print("\033[K" + data)
 
 
 def checkServer(address, port):
