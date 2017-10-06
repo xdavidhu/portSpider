@@ -40,7 +40,7 @@ def createIPList(network):
 
 def print1(data):
     if verbose:
-        print(data)
+        print("\033[K#" + data)
 
 def checkServer(address, port):
     s = socket.socket()
