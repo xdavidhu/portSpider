@@ -192,9 +192,12 @@ header = """
 ██╔═══╝ ██║   ██║██╔══██╗   ██║   ╚════██║██╔═══╝ ██║██║  ██║██╔══╝  ██╔══██╗
 ██║     ╚██████╔╝██║  ██║   ██║   ███████║██║     ██║██████╔╝███████╗██║  ██║
 ╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝     ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝
-                                             v1.0 by David Schütz (@xdavidhu)
 """
-print(GREEN + header + END)
+
+try:
+    print(GREEN + header + "                                             v1.0 by David Schütz (@xdavidhu)\n" + END)
+except:
+    print(GREEN + header + "                                                            v1.0 by @xdavidhu\n" + END)
 
 moduleList = ""
 i = 0
