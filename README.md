@@ -14,7 +14,7 @@
 <h4>portSpider is a tool for scanning huge network ranges to find open ports and vulnerable services. This tool is not intended to scan one target, rather a whole IP range. (eg. 192.168.0.0/24) Most of the time companies/organizations have public information about their owned public IP ranges, so portSpider will help you to scan all of their machines at once for vulnerable devices/services.</h4>
 
 # modules:
-  * **http** - Scan for open HTTP ports, and get the the titles.<br>
+  * **http** - Scan for open HTTP ports, and get the titles.<br>
   * **mysql** - Scan for open MySQL servers, and try to log in with the default credentials.<br>
   * **mongodb** - Scan for open MongoDB instances, and check if they are password protected.<br>
   * **ssh** - Scan for open SSH ports.<br>
