@@ -3,7 +3,6 @@
 
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[1;94m', '\033[1;91m', '\33[1;97m', '\33[1;93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
-
 try:
     import os
     import traceback
@@ -25,11 +24,13 @@ allModules = [["http", "Scan for open HTTP ports, and get the titles."],
               ["gameserver", "Scan for open game server ports."],
               ["manual", "Scan custom ports."], ["template", "Template module for developers."]]
 
-textToModule = [["http", http], ["template", template], ["printer", printer], ["gameserver", gameserver], ["ssh", ssh], ["manual", manual], ["mongodb", mongodb], ["mysql", mysql]]
+textToModule = [["http", http], ["template", template], ["printer", printer], ["gameserver", gameserver], ["ssh", ssh],
+                ["manual", manual], ["mongodb", mongodb], ["mysql", mysql]]
 
 inModule = False
 currentModule = ""
 moduleOptions = []
+
 
 def commandHandler(command):
     command = str(command)
@@ -45,6 +46,7 @@ def commandHandler(command):
     # HELP
     def helpPrint(name, desc, usage):
         print("\t" + YELLOW + name + GREEN + ": " + BLUE + desc + GREEN + " - '" + usage + "'" + END)
+
     if command == "help":
         print(GREEN + "\n[I] Available commands:\n" + END)
         helpPrint("MODULES", "List all modules", "modules")
@@ -75,7 +77,8 @@ def commandHandler(command):
             else:
                 print(RED + "[!] Module '" + YELLOW + tempModule + RED + "' not found." + END)
         else:
-            print(RED + "[!] Module '" + YELLOW + currentModule + RED + "' already selected. Type '" + YELLOW + "back" + RED + "' to go back to the main menu." + END)
+            print(
+                RED + "[!] Module '" + YELLOW + currentModule + RED + "' already selected. Type '" + YELLOW + "back" + RED + "' to go back to the main menu." + END)
     elif command == "use":
         print(RED + "[!] Usage: 'use " + YELLOW + "module_name" + RED + "'" + END)
 
@@ -85,7 +88,8 @@ def commandHandler(command):
             print(GREEN + "\n Options for module '" + YELLOW + currentModule + GREEN + "':" + END)
             for option in moduleOptions:
                 if option[2] == "":
-                    print("\t" + YELLOW + option[0] + GREEN + " - " + BLUE + option[1] + GREEN + " ==> " + RED + "[NOT SET]" + END)
+                    print("\t" + YELLOW + option[0] + GREEN + " - " + BLUE + option[
+                        1] + GREEN + " ==> " + RED + "[NOT SET]" + END)
                 else:
                     print("\t" + YELLOW + option[0] + GREEN + " - " + BLUE + option[1] + GREEN + " ==> '" + YELLOW +
                           option[2] + GREEN + "'" + END)
@@ -175,7 +179,9 @@ def commandHandler(command):
         pass
 
     else:
-        print(RED + "[!] Unknown command: '" + YELLOW + command + RED + "'. Type '" + YELLOW + "help" + RED + "' for all available commands." + END)
+        print(
+            RED + "[!] Unknown command: '" + YELLOW + command + RED + "'. Type '" + YELLOW + "help" + RED + "' for all available commands." + END)
+
 
 parser = argparse.ArgumentParser(description="portSpider")
 parser.add_argument("--test", action='store_true')
@@ -203,7 +209,7 @@ moduleList = ""
 i = 0
 for module in allModules:
     i += 1
-    if i%7 == 0:
+    if i % 7 == 0:
         moduleList += "\n"
     moduleList = moduleList + YELLOW + module[0] + GREEN + ", "
 moduleList = moduleList[:-2]
