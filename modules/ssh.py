@@ -7,6 +7,7 @@ import os
 
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[1;94m', '\033[1;91m', '\33[1;97m', '\33[1;93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
+
 class ThreadManager(object):
     i = 0
 
@@ -24,6 +25,7 @@ class ThreadManager(object):
     def getID(self):
         return self.i + 1
 
+
 def coreOptions():
     options = [["network", "IP range to scan", ""], ["port-timeout", "Timeout (in sec) for port 80.", "0.3"],
                ["threads", "Number of threads to run.", "50"], ["verbose", "Show verbose output.", "true"]]
@@ -37,9 +39,11 @@ def createIPList(network):
         ipList.append(x)
     return ipList
 
+
 def print1(data):
     if verbose:
         print("\033[K" + data)
+
 
 def checkServer(address, port):
     s = socket.socket()
@@ -55,6 +59,7 @@ def checkServer(address, port):
     except:
         s.close()
         return "FAIL"
+
 
 def writeToFile(line):
     file = open(fileName, "a")
@@ -95,7 +100,8 @@ def scan(i):
         if isUp[0] != "FAIL":
             if isUp[0] == "True":
                 openPorts = openPorts + 1
-                print1(GREEN + "[+] Port " + str(port) +  " is open on '" + stringIP + "' - Connection response: " + str(isUp[1]) + END)
+                print1(GREEN + "[+] Port " + str(port) + " is open on '" + stringIP + "' - Connection response: " + str(
+                    isUp[1]) + END)
                 logLine = stringIP + " - " + str(isUp[1]) + "\n"
                 logLines.append(logLine)
             elif not isUp[0] == "True":
@@ -177,9 +183,9 @@ def core(moduleOptions):
                 break
             statusWidget()
     except KeyboardInterrupt:
-            stop = True
-            verbose = False
-            print("\n" + RED + "[I] Stopping..." + END)
+        stop = True
+        verbose = False
+        print("\n" + RED + "[I] Stopping..." + END)
     stop = True
     verbose = False
 
