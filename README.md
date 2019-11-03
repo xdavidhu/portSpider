@@ -10,6 +10,9 @@
 [![Compatibility](https://img.shields.io/badge/python-3.3%2C%203.4%2C%203.5%2C%203.6-brightgreen.svg)](https://github.com/xdavidhu/portSpider)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/xdavidhu/portSpider/blob/master/LICENSE)
 [![Stars](https://img.shields.io/github/stars/xdavidhu/portSpider.svg)](https://github.com/xdavidhu/portSpider)
+
+### ⚠️ Warning! This project is no longer maintained and may not work as excepted.
+
 <h3>A lightning fast multithreaded network scanner framework with modules.</h3>
 <h4>portSpider is a tool for scanning huge network ranges to find open ports and vulnerable services. This tool is not intended to scan one target, rather a whole IP range. (eg. 192.168.0.0/24) Most of the time companies/organizations have public information about their owned public IP ranges, so portSpider will help you to scan all of their machines at once for vulnerable devices/services.</h4>
 
