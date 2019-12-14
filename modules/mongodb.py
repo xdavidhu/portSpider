@@ -8,6 +8,7 @@ import os
 
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[1;94m', '\033[1;91m', '\33[1;97m', '\33[1;93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
+
 class ThreadManager(object):
     i = 0
 
@@ -24,6 +25,7 @@ class ThreadManager(object):
 
     def getID(self):
         return self.i + 1
+
 
 def checkMongo(host, port):
     try:
@@ -49,11 +51,14 @@ def checkMongo(host, port):
 
     return ["success", serverVersion, dbs]
 
+
 def coreOptions():
     options = [["network", "IP range to scan", ""], ["port", "Port to scan.", "27017"],
-               ["port-timeout", "Timeout (in sec) for port 80.", "0.3"], ["mongo-timeout", "Timeout (in sec) for the database connection.", "3"],
+               ["port-timeout", "Timeout (in sec) for port 80.", "0.3"],
+               ["mongo-timeout", "Timeout (in sec) for the database connection.", "3"],
                ["threads", "Number of threads to run.", "50"],
-               ["checkauth", "Connect to the server and perform tests.", "true"], ["verbose", "Show verbose output.", "true"]]
+               ["checkauth", "Connect to the server and perform tests.", "true"],
+               ["verbose", "Show verbose output.", "true"]]
     return options
 
 
@@ -64,9 +69,11 @@ def createIPList(network):
         ipList.append(x)
     return ipList
 
+
 def print1(data):
     if verbose:
         print("\033[K" + data)
+
 
 def checkServer(address, port):
     s = socket.socket()
@@ -128,11 +135,13 @@ def scan(i):
                     if mongo[0] == "conection-error":
                         mongoStatus = False
                         mongoStatusReason = "CONNECTION ERROR"
-                        print1(RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mongoStatusReason + END)
+                        print1(
+                            RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mongoStatusReason + END)
                     elif mongo[0] == "permission-error":
                         mongoStatus = False
                         mongoStatusReason = "PERMISSION ERROR"
-                        print1(RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mongoStatusReason + END)
+                        print1(
+                            RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mongoStatusReason + END)
                     elif mongo[0] == "success":
                         mongoStatus = True
                         version = mongo[1]
@@ -146,16 +155,21 @@ def scan(i):
                         else:
                             dbsList = "-"
 
-                        print1(GREEN + "[+] Open database found:\n\tIP: " + stringIP + "\n\t" + "MongoDB version: " + str(version) + "\n\tDB's: " + dbsList + "\n")
+                        print1(
+                            GREEN + "[+] Open database found:\n\tIP: " + stringIP + "\n\t" + "MongoDB version: " + str(
+                                version) + "\n\tDB's: " + dbsList + "\n")
 
                     else:
-                        print1(RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mongoStatusReason + END)
+                        print1(
+                            RED + "[!] Failed connecting to the database on '" + stringIP + "'. ERROR: " + mongoStatusReason + END)
                         mongoStatus = False
 
                     if mongoStatus:
-                        logLine = stringIP + " - " + str(port) + " OPEN" + " - " + "OPEN DATABASE - Version: " + version + " - " + " DB's: " + dbsList + "\n"
+                        logLine = stringIP + " - " + str(
+                            port) + " OPEN" + " - " + "OPEN DATABASE - Version: " + version + " - " + " DB's: " + dbsList + "\n"
                     else:
-                        logLine = stringIP + " - " + str(port) + " OPEN" + " - DB SCAN ERROR: " + mongoStatusReason + "\n"
+                        logLine = stringIP + " - " + str(
+                            port) + " OPEN" + " - DB SCAN ERROR: " + mongoStatusReason + "\n"
                     logLines.append(logLine)
                 else:
                     logLine = stringIP + " - " + str(port) + " OPEN\n"
@@ -169,7 +183,8 @@ def scan(i):
 
 def core(moduleOptions):
     print(
-        "\n" + GREEN + "MONGODB module by @xdavidhu. Scanning subnet '" + YELLOW + moduleOptions[0][2] + GREEN + "'...\n")
+        "\n" + GREEN + "MONGODB module by @xdavidhu. Scanning subnet '" + YELLOW + moduleOptions[0][
+            2] + GREEN + "'...\n")
 
     global status
     global fileName
@@ -260,9 +275,9 @@ def core(moduleOptions):
                 break
             statusWidget()
     except KeyboardInterrupt:
-            stop = True
-            verbose = False
-            print("\n" + RED + "[I] Stopping..." + END)
+        stop = True
+        verbose = False
+        print("\n" + RED + "[I] Stopping..." + END)
     stop = True
     verbose = False
 

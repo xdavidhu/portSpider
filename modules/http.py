@@ -9,6 +9,7 @@ import os
 
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[1;94m', '\033[1;91m', '\33[1;97m', '\33[1;93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
+
 class ThreadManager(object):
     i = 0
 
@@ -26,9 +27,11 @@ class ThreadManager(object):
     def getID(self):
         return self.i + 1
 
+
 def coreOptions():
     options = [["network", "IP range to scan", ""], ["port-timeout", "Timeout (in sec) for port 80.", "0.3"],
-               ["title-timeout", "Timeout (in sec) for title resolve.", "3"], ["threads", "Number of threads to run.", "50"],
+               ["title-timeout", "Timeout (in sec) for title resolve.", "3"],
+               ["threads", "Number of threads to run.", "50"],
                ["verbose", "Show verbose output.", "true"]]
     return options
 
@@ -40,9 +43,11 @@ def createIPList(network):
         ipList.append(x)
     return ipList
 
+
 def print1(data):
     if verbose:
         print("\033[K" + data)
+
 
 def checkServer(address, port):
     s = socket.socket()
@@ -225,9 +230,9 @@ def core(moduleOptions):
                 break
             statusWidget()
     except KeyboardInterrupt:
-            stop = True
-            verbose = False
-            print("\n" + RED + "[I] Stopping..." + END)
+        stop = True
+        verbose = False
+        print("\n" + RED + "[I] Stopping..." + END)
     stop = True
     verbose = False
 
